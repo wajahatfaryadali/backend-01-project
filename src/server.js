@@ -26,7 +26,7 @@ app.get("/", (_, res) => {
 });
 
 // movies routes
-app.use("/movies", movieRoutes);
+app.use("/api/v1/movies", movieRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
