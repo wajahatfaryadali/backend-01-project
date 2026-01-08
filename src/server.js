@@ -1,8 +1,10 @@
 // const { configDotenv } = require("dotenv");
-import { configDotenv } from "dotenv";
-import movieRoutes from "./routes/movie.routes.js";
-import { connectDB } from "./config/db.js";
 import express from "express";
+import { configDotenv } from "dotenv";
+import { connectDB } from "./config/db.js";
+
+import movieRoutes from "./routes/movie.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 // const express = require("express");
 
@@ -16,14 +18,19 @@ const app = express();
 
 const PORT = process.env.PORT || 4001;
 
-connectDB()
+connectDB();
 
-// json middleware
+// json parsing middleware
 app.use(express.json());
+// url encoded parsing middleware 
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_, res) => {
   res.json({ message: "duck you" });
 });
+
+// auth routes
+app.use("/api/v1/auth", authRoutes);
 
 // movies routes
 app.use("/api/v1/movies", movieRoutes);
