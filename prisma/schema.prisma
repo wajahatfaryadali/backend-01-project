@@ -13,8 +13,54 @@ datasource db {
   provider = "postgresql"
 }
 
+// tables be like this 
+// user | movie | watchlist
+
 model User {
-  id    String @id @default(cuid())
-  name  String
-  email String @unique
+  id       String @id @default(cuid())
+  name     String
+  email    String @unique
+  password String
+
+  createdAt DateTime    @default(now())
+  movies    Movie[]     @relation("MovieCreator")
+  watchlist Watchlist[]
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  title       String
+  overviews   String?
+  releaseYear String
+  genres      String[] @default([])
+  runTime     Int?
+  posterURL   String?
+
+  createdBy String
+  createdAt DateTime @default(now())
+
+  user      User        @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  watchlist Watchlist[]
+}
+
+enum WatchlistStatus {
+  PLANNED   @map("planned")
+  WATCHING  @map("watching")
+  COMPLETED @map("completed")
+  DROPpED   @map("dropped")
+}
+
+model Watchlist {
+  id      String          @id @default(cuid())
+  userID  String
+  movieID String
+  status  WatchlistStatus @default(PLANNED)
+  rating  Int?
+  notes   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userID], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieID], references: [id], onDelete: Cascade)
 }
