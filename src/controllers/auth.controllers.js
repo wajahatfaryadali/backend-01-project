@@ -41,3 +41,33 @@ export const registerController = async (req, res) => {
     console.error(error);
   }
 };
+
+export const loginController = async (req, res) => {
+  const body = req.body;
+  const { email, password } = body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: email },
+    });
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "email or password not correct! " });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      return res
+        .status(401)
+        .json({ message: "email or password not correct! " });
+    }
+
+    res.status(200).json({ message: "good to go! ", data: user });
+  } catch (error) {
+    res.status(500).json({ message: "Inernal Server Error", error: error });
+    console.error(error);
+  }
+};
