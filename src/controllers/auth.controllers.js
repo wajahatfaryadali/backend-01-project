@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../config/db.js";
+import { generateToken } from "../utils/helpers.js";
+
 
 export const registerController = async (req, res) => {
   try {
@@ -65,7 +67,18 @@ export const loginController = async (req, res) => {
         .json({ message: "email or password not correct! " });
     }
 
-    res.status(200).json({ message: "good to go! ", data: user });
+    const token = generateToken(user.id);
+
+    res.status(200).json({
+      message: "good to go! ", data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email
+        },
+        token: token
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: "Inernal Server Error", error: error });
     console.error(error);
