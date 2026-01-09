@@ -84,3 +84,23 @@ export const loginController = async (req, res) => {
     console.error(error);
   }
 };
+
+export const logOutController = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    expires: new Date(0)
+  })
+
+  res.status(200).json({
+    message: "logged out successfully!"
+  })
+
+  // "token", token, {
+  //       httpOnly: true,
+  //       // path: , 
+  //       maxAge: (1000 * 60 * 60 * 24) * 7,
+  //       secure: process.env.NODE_ENV === "production",
+  //       sameSite: "strict"
+  //   })
+
+}
