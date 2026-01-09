@@ -2,7 +2,7 @@
 
 # project to learn about how prisma postgresql works with Express
 
-### Day One
+# Day One
 
 ### steps
 
@@ -13,7 +13,7 @@
 npm i nodemon --save-dev
 ```
 
-### Day Three
+# Day two
 
 some important definations and concepts
 
@@ -131,3 +131,17 @@ await fetch("/logout", {
 - Logout
 - Frontend calls /logout
 - Backend clears cookie
+
+# Day three
+
+seeding 
+```
+to prevent duplications in seeding
+skipDuplicates: 
+```
+
+Skip seed during migration: If you are running migrations but want to skip the seed script, use 
+```
+npx prisma migrate dev --skip-seed. 
+```
+
