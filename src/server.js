@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 
 import movieRoutes from "./routes/movie.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import watchListRoutes from "./routes/watchlist.routes.js";
 
 // const express = require("express");
 
@@ -22,7 +23,7 @@ connectDB();
 
 // json parsing middleware
 app.use(express.json());
-// url encoded parsing middleware 
+// url encoded parsing middleware
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_, res) => {
@@ -34,6 +35,9 @@ app.use("/api/v1/auth", authRoutes);
 
 // movies routes
 app.use("/api/v1/movies", movieRoutes);
+
+// watch list router
+app.use("/api/v1/watchList", watchListRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);

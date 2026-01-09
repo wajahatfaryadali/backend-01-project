@@ -1,8 +1,13 @@
 import express from "express";
+import {
+  addToWatchListController,
+  getWatchListController,
+} from "../controllers/watchlist.controllers.js";
 
-const watchlistRouter = express.Router();
+const watchListRoutes = express.Router();
 
-watchlistRouter.get("/", getWatchListController);
+watchListRoutes.get("/", getWatchListController);
 
-watchlistRouter.post("/", addToWatchListController);
+watchListRoutes.post("/", addToWatchListController);
 
+export default watchListRoutes;
