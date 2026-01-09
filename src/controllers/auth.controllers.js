@@ -67,7 +67,7 @@ export const loginController = async (req, res) => {
         .json({ message: "email or password not correct! " });
     }
 
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, res);
 
     res.status(200).json({
       message: "good to go! ", data: {
