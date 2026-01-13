@@ -1,9 +1,9 @@
 import { prisma } from "../config/db.js";
 
 export const getWatchListController = async (req, res) => {
-  // const watchList = async prisma.
+  const watchList = await prisma.watchlist.findMany();
   try {
-    res.status(200).json({ message: "success", data: [] });
+    res.status(200).json({ message: "success", data: watchList });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", data: error });
   }
@@ -28,7 +28,13 @@ export const addToWatchListController = async (req, res) => {
     }
 
     const isAlreadyExists = await prisma.watchlist.findUnique({
-      where: { id: movieID },
+      // where: { id: movieID },
+      where: {
+        userID_movieID: {
+          userID: userID,
+          movieID: movieID,
+        },
+      },
     });
 
     if (isAlreadyExists) {
@@ -41,17 +47,11 @@ export const addToWatchListController = async (req, res) => {
       data: {
         userID,
         movieID,
-        status,
+        status: status || "planned",
         rating: rating || 0,
         notes: notes || "",
       },
     });
-
-    //     userID  String
-    //   movieID String
-    //   status  WatchlistStatus @default(PLANNED)
-    //   rating  Int?
-    //   notes   String?
 
     res
       .status(200)
