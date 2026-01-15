@@ -60,3 +60,34 @@ export const addToWatchListController = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", data: error });
   }
 };
+
+export const removeFromWatchList = async (req, res) => {
+  try {
+
+    const watchLIstID = req.params.id;
+
+    if (!watchLIstID) {
+      return res.status(404).json({ message: "Item ID is required" })
+    }
+
+    const item = await prisma.watchlist.findUnique({ where: { id: watchLIstID } })
+
+    if (!item) {
+      return res.status(404).json({ message: "Item is not found!" })
+    }
+
+    if (req.user.id !== item.userID) {
+      return res.status(404).json({ message: "Action Not allowed!" })
+    }
+
+
+    const deletedItem = await prisma.watchlist.delete({ where: { id: watchLIstID } })
+
+    res.status(200).json({ message: "Item Deleted Successfully", data: deletedItem })
+
+  } catch (error) {
+    console.log('error removing from watch list : ', error)
+    res.status(500).json({ message: "Interval Server Error", error: error })
+
+  }
+}

@@ -2,6 +2,7 @@ import express from "express";
 import {
   addToWatchListController,
   getWatchListController,
+  removeFromWatchList,
 } from "../controllers/watchlist.controllers.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -13,7 +14,7 @@ watchListRoutes.get("/", getWatchListController);
 
 watchListRoutes.post("/", addToWatchListController);
 
-// now test on post man by addig new watchlist movies and then add delete controller and route by passing id param 
-// also learn about how to handle bulk delete and if body works in delete option
+watchListRoutes.delete("/:id", removeFromWatchList);
+
 
 export default watchListRoutes;
