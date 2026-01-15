@@ -64,13 +64,51 @@ export const addToWatchListController = async (req, res) => {
 export const removeFromWatchList = async (req, res) => {
   try {
 
-    const watchLIstID = req.params.id;
+    const watchListID = req.params.id;
 
-    if (!watchLIstID) {
+    if (!watchListID) {
       return res.status(404).json({ message: "Item ID is required" })
     }
 
-    const item = await prisma.watchlist.findUnique({ where: { id: watchLIstID } })
+    const item = await prisma.watchlist.findUnique({ where: { id: watchListID } })
+
+    if (!item) {
+      return res.status(404).json({ message: "Item is not found!" })
+    }
+
+    if (req.user.id !== item.userID) {
+      return res.status(404).json({ message: "Action Not allowed!" })
+    }
+
+    const deletedItem = await prisma.watchlist.delete({ where: { id: watchListID } })
+
+    res.status(200).json({ message: "Item Deleted Successfully", data: deletedItem })
+
+  } catch (error) {
+
+    console.log('error removing from watch list : ', error)
+    res.status(500).json({ message: "Interval Server Error", error: error })
+
+  }
+}
+
+export const updateWatchList = async (req, res) => {
+
+  console.log('checking body data ****** ', req.params)
+  try {
+
+    const watchListID = req.params.id;
+    const data = req.body;
+
+    console.log('checking body data ****** ', req.params)
+    console.log('checking body data ****** ', watchListID)
+    console.log('checking body data ****** ', data)
+
+    if (!watchListID) {
+      return res.status(404).json({ message: "Item ID is required" })
+    }
+
+    const item = await prisma.watchlist.findUnique({ where: { id: watchListID } })
 
     if (!item) {
       return res.status(404).json({ message: "Item is not found!" })
@@ -81,13 +119,13 @@ export const removeFromWatchList = async (req, res) => {
     }
 
 
-    const deletedItem = await prisma.watchlist.delete({ where: { id: watchLIstID } })
+    const updatedItem = await prisma.watchlist.update({ where: { id: watchListID }, data: data })
 
-    res.status(200).json({ message: "Item Deleted Successfully", data: deletedItem })
+    res.status(200).json({ message: "Item Updated Successfully!", data: updatedItem })
 
   } catch (error) {
     console.log('error removing from watch list : ', error)
     res.status(500).json({ message: "Interval Server Error", error: error })
-
   }
+
 }
